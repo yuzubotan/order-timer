@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声操作可能なカウントダウンタイマー</title>
+    <style>
+      body {
+            width: 340px;
+            height: 450px;
+            background-color: #a8bafa;
+        }
+      
+      input {
+        margin-bottom: 50px;
+        height: 50px;
+        width: 100%;
+      }
+      
+      textarea {
+        height: 80px;
+        width: 100%;
+        margin-bottom: 20px;
+        
+      }
+      
+      .submit {
+        background-color: blue;
+        color: white;
+      }
+      
+      .button {
+        text-align: center;
+      }
+      
+</style>
+</head>
+<body>
+  <div id="timer"></div>
+  <form action="/add" method="post">
+    <div>
+      <label>時刻</label>
+      <input type="datetime-local" name="time" id="reservedTime" required>
+    </div>
+    
+    <div>
+      <label>本数</label>
+      <input type="text" name="number" id="number">
+    </div>
+    
+    <div>
+      <label>名前</label>
+      <input type="text" name="name" id="name">
+    </div>
+      
+    <div>
+      <label>備考</label>
+      <textarea name="detail" id="detail"></textarea>
+    </div>
+      
+    <div>
+      <input type="submit" class="submit">
+    </div>
+      
+    <div class="button">
+      <button onclick="location.href='/'">TOP</button>
+    </div>
+    
+    
+      
+  </form>
+   
+<script>
+  const socket = new WebSocket('wss://twisty-hilarious-wednesday.glitch.me/');
+  socket.addEventListener('message', (event) => {
+    const message = JSON.parse(event.data);
+    updateTimer();
+    
+    function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            let hours = Math.floor(message.timerValue / 3600);
+            let minutes = Math.floor((message.timerValue % 3600) / 60);
+            let seconds = message.timerValue % 60;
+            
+            timerElement.textContent = `${String(hours).padStart(1, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+  })
+  </script>
+
+</body>
+</html>
