@@ -1,8 +1,3 @@
-app.use((req, res, next) => {
-  console.log('REQ:', req.method, req.url);
-  next();
-});
-
 const db = require("./db.js");
 const app = require("./app.js");
 const port = process.env.PORT || 3000
@@ -10,6 +5,11 @@ const http = require('http');
 const WebSocket = require('ws');
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
+
+app.use((req, res, next) => {
+  console.log('REQ:', req.method, req.url);
+  next();
+});
 
 let timerValue = 0;
 setInterval(() => {
