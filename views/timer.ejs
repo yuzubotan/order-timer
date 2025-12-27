@@ -114,26 +114,26 @@ margin-left: 5px;
             <td class="cal"><button class="operation_btn" id="resetButton" onclick="reset()">リセット</button></td>
           </tr>
           <tr>
-            <td class="cal"><button class="operation_btn" onclick="location.href='/add'">予約</button></td>
-            <td class="cal"><button class="operation_btn" onclick="location.href='/view'">予約一覧</button></td>
+            <td class="cal"><button class="operation_btn" onclick="goTo='/add'">予約</button></td>
+            <td class="cal"><button class="operation_btn" onclick="goTo='/view'">予約一覧</button></td>
           </tr>
       </table>
       
       <div id="confirmModal" style="
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-  justify-content:center;
-  align-items:center;
-">
-  <div style="background:white; padding:20px;">
-    <p id="confirmText">この注文を追加しますか？</p>
-    <button id="confirmOk">OK</button>
-    <button id="confirmCancel">キャンセル</button>
-    <p id="countdown"></p>
-  </div>
-</div>
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.5);
+        justify-content:center;
+        align-items:center;
+      ">
+        <div style="background:white; padding:20px;">
+          <p id="confirmText">この注文を追加しますか？</p>
+          <button id="confirmOk">OK</button>
+          <button id="confirmCancel">キャンセル</button>
+          <p id="countdown"></p>
+        </div>
+      </div>
 
      <table border="2" style="border-collapse:collapse;">
    <% for (let i in data) { %>
@@ -161,6 +161,13 @@ margin-left: 5px;
       </button>
         
 <script>
+  let isNavigating = false;
+
+  function goTo(path) {
+    isNavigating = true;
+    window.location.href = path;
+  }
+
   const socket = new WebSocket(
   (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host
 );
@@ -421,6 +428,7 @@ document.getElementById('10minute--').addEventListener('click', function(){
   
   
 async function addTelOrder() {
+      if (isNavigating) return;
       <% for (let i = 0; i < data.length ; i++) { %>
         let needMinutes<%- i %> =  <%= data[i].number / 10 + 5 %>;
         let addTime<%- i %> =  {id:<%= data[i].id %>, number:<%= data[i].number / 10 %>, checked:<%= data[i].checked %>};
@@ -465,7 +473,10 @@ async function addTelOrder() {
         window.location = "/";
     }
   
-      
+      window.addEventListener('beforeunload', () => {
+        isNavigating = true;
+      });
+
 
 
       setInterval(function() {
