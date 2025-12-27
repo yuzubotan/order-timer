@@ -8,6 +8,8 @@ app.set("views", "views");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false }))
+app.use(express.static('public'));
+
 
 
 
