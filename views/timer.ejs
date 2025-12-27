@@ -73,12 +73,17 @@ margin-left: 5px;
       </audio>
       
       <audio id="btn_audio2">
-        <source src= "https://cdn.glitch.global/d4944018-f02f-4597-ba1a-621cfec14b1e/%E6%B1%BA%E5%AE%9A%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E6%8A%BC%E3%81%9952.mp3?v=1719538595107">
+        <source src= "/5minutes.mp3">
       </audio>
       
       <audio id="btn_audio3">
-        <source src= "https://cdn.glitch.global/d4944018-f02f-4597-ba1a-621cfec14b1e/%E6%B1%BA%E5%AE%9A%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%92%E6%8A%BC%E3%81%9953.mp3?v=1719559722260">
+        <source src= "/10minutes.mp3">
       </audio>
+
+      <audio id="btn_audio4">
+        <source src= "/module.mp3">
+      </audio>
+
         <table>
           <tr>
             
@@ -123,7 +128,7 @@ margin-left: 5px;
   align-items:center;
 ">
   <div style="background:white; padding:20px;">
-    <p>この注文を追加しますか？</p>
+    <p id="confirmText">この注文を追加しますか？</p>
     <button id="confirmOk">OK</button>
     <button id="confirmCancel">キャンセル</button>
     <p id="countdown"></p>
@@ -241,12 +246,20 @@ function timerStart() {
     
 };
 
-function confirmWithTimeout(timeoutMs = 15000) {
+function confirmWithTimeout(orderHour, orderMinute, orderCount, timeoutMs = 15000) {
   return new Promise(resolve => {
     const modal = document.getElementById("confirmModal");
     const okBtn = document.getElementById("confirmOk");
     const cancelBtn = document.getElementById("confirmCancel");
     const countdown = document.getElementById("countdown");
+    const text = document.getElementById("confirmText");
+
+    // 🔊 モーダル表示時に音を鳴らす
+    audio4();
+
+    // 📝 テキストを動的に変更
+    text.textContent =
+      `${orderHour}時${orderMinute}分に${orderCount}本の注文をタイマーに加えますか？`;
 
     modal.style.display = "flex";
 
@@ -260,7 +273,7 @@ function confirmWithTimeout(timeoutMs = 15000) {
 
     const timer = setTimeout(() => {
       cleanup();
-      resolve(true); // ← 自動OK
+      resolve(true);
     }, timeoutMs);
 
     function cleanup() {
@@ -280,6 +293,7 @@ function confirmWithTimeout(timeoutMs = 15000) {
     };
   });
 }
+
 
 
   
@@ -341,6 +355,12 @@ function audio3() {
     
     document.getElementById('btn_audio3').currentTime = 0; //連続クリックに対応
     document.getElementById('btn_audio3').play(); //クリックしたら音を再生
+}
+
+function audio4() {
+    
+    document.getElementById('btn_audio4').currentTime = 0; //連続クリックに対応
+    document.getElementById('btn_audio4').play(); //クリックしたら音を再生
 }
 
 
@@ -407,7 +427,15 @@ async function addTelOrder() {
         let timeToStart<%- i %> = new Date(new Date('<%= data[i].time %>') - needMinutes<%- i %> * 60 * 1000 );
                                                                                              
         if (wait_minutes > timeToStart<%- i %> && addTime<%- i %>.checked === 0) {
-                const confirmed = await confirmWithTimeout(15000);
+                const orderDate = new Date('<%= data[i].time %>');
+
+                const confirmed = await confirmWithTimeout(
+                      orderDate.getHours(),
+                      orderDate.getMinutes(),
+                      <%= data[i].number %>,
+                      15000
+                    );
+
                 
                 if(confirmed){
                 socket.send(JSON.stringify({ action: 'increase', amount: Math.floor(addTime<%- i %>.number * s) }))                
