@@ -36,6 +36,8 @@
 </style>
 </head>
 <body>
+  
+
   <div id="timer"></div>
   <form action="/add" method="post">
     <div>
@@ -71,6 +73,7 @@
   </form>
    
 <script>
+  const PAGE = "view";git 
   const socket = new WebSocket('wss://twisty-hilarious-wednesday.glitch.me/');
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);

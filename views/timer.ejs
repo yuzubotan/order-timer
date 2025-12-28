@@ -65,6 +65,8 @@ margin-left: 5px;
     </style>
 </head>
 <body>
+  
+
     <div class="button-wrapper">
       
       <audio id="btn_audio">
@@ -169,6 +171,7 @@ margin-left: 5px;
       </button>
         
 <script>
+  const PAGE = "timer";
   let isNavigating = false;
 
   function goTo(path) {
@@ -489,22 +492,22 @@ async function addTelOrder() {
       });
 
 
-/*
-      setInterval(function() {
-        addTelOrder();
+      if (PAGE === "timer") {
+  setInterval(function() {
+    addTelOrder();
+  }, 1000 * 10);
 
-      }, 1000 * 10);
-  
-      setInterval(function() {
-        saveTimerValue(timerValue)
+  setInterval(function() {
+    saveTimerValue(timerValue);
+  }, 1000);
 
-      }, 1000);
-                                                 
-      let autoReloadTimer = setInterval(function() {
-          if (!isNavigating) {
-            window.location.reload();
-          }
-      }, 1000 * 60)
+  setInterval(function() {
+    if (!isNavigating) {
+      window.location.reload();
+    }
+  }, 1000 * 60);
+}
+
 </script>       
 </body>
 </html>
