@@ -457,11 +457,10 @@ async function addTelOrder() {
                 socket.send(JSON.stringify({ action: 'increase', amount: Math.floor(addTime<%- i %>.number * s) }))                
                                                 
                 wait_minutes = new Date(now.getTime() + timerValue * 1000 ); 
-                window.location="/checked?id=" + addTime<%- i %>.id;
-                return;
+                
                 }
                 
-            
+            window.location="/checked?id=" + addTime<%- i %>.id;
           }
            
        <% } %>
