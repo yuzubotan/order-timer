@@ -73,8 +73,10 @@
   </form>
    
 <script>
-  const PAGE = "view";git 
-  const socket = new WebSocket('wss://twisty-hilarious-wednesday.glitch.me/');
+  const PAGE = "view";
+  const socket = new WebSocket(
+  (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host
+);
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     updateTimer();
